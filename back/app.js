@@ -441,6 +441,26 @@ app.post("/api/insert/agenda-consulta", (req,res) =>{
 });
 
 
+
+// SPECIAL QUERIES - getMedicosByClinica
+// Médicos que atuam na respectiva clinica
+app.get("/api/get/medicosByClinica/:CodCli", (req,res) =>{
+    const codCli = req.params.CodCli
+    const sqlSelectMedicosByClinica = 
+    "SELECT m.NomeMed, m.Telefone, m.Email, m.CodEspec FROM MEDICO as m WHERE m.CodMed IN (SELECT cm.CodMed FROM CLINICA_MEDICO as cm WHERE cm.CodCli = ?)"
+     db.query(sqlSelectMedicosByClinica, codCli, (err,result)=>{
+        if(err) {
+            res.send("Error message: " + err.sqlMessage);
+            console.log(err);
+        } else{
+            res.send(result);
+            console.log(result);
+        
+        }
+    });
+
+});
+
 // colocando o servidor no ar
 app.listen(3001,()=> {
     console.log('Running on port 3001');
